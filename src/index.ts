@@ -1,20 +1,18 @@
-import 'source-map-support/register';
+import { logger } from './utils';
 
-import Fastify, { FastifyReply, FastifyRequest } from 'fastify';
-const fastify = Fastify({ logger: true });
+require('source-map-support/register');
+const express = require('express');
+const dotenv = require('dotenv');
 
-// Declare a route
-fastify.get('/', async (request: FastifyRequest, reply: FastifyReply) => {
-    return { message: JSON.stringify(reply.context) };
+dotenv.config();
+
+const app = express();
+const port = process.env.port;
+
+app.get('/', (req: any, res: any) => {
+    res.send({ message: 'Data information.' });
 });
 
-// Run the server!
-const start = async (): Promise<void> => {
-    try {
-        await fastify.listen({ port: 3000 });
-    } catch (err) {
-        fastify.log.error(err);
-        process.exit(1);
-    }
-};
-start();
+app.listen(port, () => {
+    logger.info(`[server]: Server is running at https://localhost:${port}`);
+});
